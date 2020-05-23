@@ -5,7 +5,6 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
 import java.util.Iterator;
-import java.util.Set;
 
 /**
  * @Describle This Class Is
@@ -18,6 +17,9 @@ public class NioServerDemo {
 
         int count = 0;
 
+        // 创建Selector
+        Selector selector = Selector.open();
+
         // 创建一个serverSocketChannel
         ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
 
@@ -26,9 +28,6 @@ public class NioServerDemo {
 
         // 设置serverSocketChannel为非阻塞
         serverSocketChannel.configureBlocking(false);
-
-        // 创建Selector
-        Selector selector = Selector.open();
 
         // 注册ServerSocketChannel到selector上  关心事件为accept
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
@@ -43,8 +42,7 @@ public class NioServerDemo {
 
 
             // 从selector获取selectorKeys
-            Set<SelectionKey> selectionKeys = selector.selectedKeys();
-            Iterator<SelectionKey> iterator = selectionKeys.iterator();
+            Iterator<SelectionKey> iterator = selector.selectedKeys().iterator();
             if (iterator.hasNext()) {
                 SelectionKey selectionKey = iterator.next();
                 // 判断selection的事件
